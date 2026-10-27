@@ -1,0 +1,16 @@
+pipeline:
+  name: error-report
+  source:
+    type: file
+    params: { path: data/access.log }
+  stages:
+    - type: filter
+      params: { minStatus: 400 }
+    - type: validate
+    - type: project
+      params: { fields: [timestamp, clientIp, status, path] }
+  sink:
+    type: file
+    params: { path: out/errors.txt }
+  errorPolicy: DEAD_LETTER
+  deadLetter: out/dead-letter.txt

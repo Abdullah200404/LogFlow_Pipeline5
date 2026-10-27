@@ -1,0 +1,14 @@
+pipeline:
+  name: api-traffic
+  source:
+    type: file
+    params: { path: data/access.log }
+  stages:
+    - type: filter
+      params: { pathPrefix: /api, minStatus: 100 }
+    - type: project
+      params: { fields: [timestamp, clientIp, method, path, status] }
+  sink:
+    type: file
+    params: { path: out/api-traffic.txt }
+  errorPolicy: SKIP
